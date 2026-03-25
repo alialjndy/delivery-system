@@ -46,12 +46,4 @@ Route::middleware('auth:api')->prefix('v1')->group(function(){
     Route::resource('wallet-transactions' , WalletTransactionController::class);
 
     });
-
-    Route::get('/allUsers' ,function (){ // For Debug Issue
-    $users = User::all();
-    foreach($users as $user){
-        echo "ID: " . $user->id . " | Name: " . $user->name . " | Email: " . $user->email . " | Role: " . $user->getRoleNames() . "<br>";
-        }
-    });
-
 Route::post('stripe/webhook' , [StripeWebhookController::class , 'handleWebhook']);

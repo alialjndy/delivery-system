@@ -2,10 +2,10 @@
 namespace src\PaymentContext\Infrastructure\Gateways ;
 
 use src\PaymentContext\Domain\Contracts\PaymentGateway;
-use src\Shared\Domain\ValueObjects\Money;
+use src\PaymentContext\Domain\Entity\Payment;
 
 class PayPalPaymentGateway implements PaymentGateway{
-    public function pay(Money $money): string
+    public function pay(Payment $payment): array
     {
         throw new \Exception('Not implemented');
     }

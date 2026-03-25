@@ -12,10 +12,10 @@ class StripeWebhookProcessor{
         try{
 
             // Comment this line when you need to test stripe in postman.
-            // $event = Webhook::constructEvent($payload , $signature , $secret);
+            $event = Webhook::constructEvent($payload , $signature , $secret);
 
             // un comment this line when you need to test stripe with postman.
-            $event = json_decode($payload);
+            // $event = json_decode($payload);
 
 
             $type = $event->type ;
