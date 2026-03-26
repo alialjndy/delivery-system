@@ -39,7 +39,7 @@ class Payment{
     }
 
     //
-    public function setTransactionId(string $transactionId){$this->transactionId = $transactionId ;}
+    public function markAsInitiatedExternally(string $transactionId){$this->transactionId = $transactionId ;}
 
     //
     public function markAsSuccessful(){

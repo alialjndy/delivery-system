@@ -23,11 +23,13 @@ use src\OrderContext\Infrastructure\Persistence\EloquentOrderRepository;
 use src\OrderContext\Infrastructure\Persistence\OrderDispatchQuery;
 use src\OrderContext\Infrastructure\Persistence\Queries\EloquentGetAllOrdersQuery;
 use src\OrderContext\Infrastructure\Persistence\Queries\EloquentGetOrderDetailsQuery;
+use src\PaymentContext\Application\Contracts\PaymentFactoryInterface;
 use src\PaymentContext\Application\Queries\GetAllPaymentsInterface;
 use src\PaymentContext\Application\Queries\GetPaymentDetailsInterface;
 use src\PaymentContext\Domain\Contracts\PaymentGateway;
 use src\PaymentContext\Domain\Events\PaymentSucceeded;
 use src\PaymentContext\Domain\Repositories\PaymentRepositoryInterface;
+use src\PaymentContext\Infrastructure\Factories\PaymentFactory;
 use src\PaymentContext\Infrastructure\Gateways\StripePaymentGateway;
 use src\PaymentContext\Infrastructure\Persistence\EloquentPaymentRepository;
 use src\PaymentContext\Infrastructure\Persistence\Queries\EloquentGetAllPaymentsQuery;
@@ -70,29 +72,34 @@ class AppServiceProvider extends ServiceProvider
     {
         ClockworkServiceProvider::class;
 
-        $this->app->bind(UserRepositoryInterface::class , EloquentUserRepository::class);
-        $this->app->bind(DriverRepositoryInterface::class , EloquentDriverRepository::class);
-        $this->app->bind(GetDriversQueryInterface::class , EloquentGetDriversQuery::class);
-        $this->app->bind(GetDriverProfileQueryInterface::class , EloquentGetDriverProfileQuery::class);
-        $this->app->bind(OrderRepositoryInterface::class , EloquentOrderRepository::class);
-        $this->app->bind(PaymentRepositoryInterface::class , EloquentPaymentRepository::class);
-        $this->app->bind(PaymentGateway::class , StripePaymentGateway::class);
-        $this->app->bind(GetAllPaymentsInterface::class ,  EloquentGetAllPaymentsQuery::class);
-        $this->app->bind(GetPaymentDetailsInterface::class ,  EloquentGetPaymentDetails::class);
+        $this->app->bind(UserRepositoryInterface::class     , EloquentUserRepository::class);
+        $this->app->bind(DriverRepositoryInterface::class   , EloquentDriverRepository::class);
+        $this->app->bind(OrderRepositoryInterface::class    , EloquentOrderRepository::class);
+        $this->app->bind(PaymentRepositoryInterface::class  , EloquentPaymentRepository::class);
         $this->app->bind(TrackingRepositoryInterface::class , RedisDriverLocationRepository::class);
-        $this->app->bind(DriverLocationRepositoryInterface::class , PersistenceRedisDriverLocationRepository::class);
-        $this->app->bind(OrderDispatchQueryInterface::class, OrderDispatchQuery::class);
-        $this->app->bind(WalletRepositoryInterface::class, EloquentWalletRepository::class);
-        $this->app->bind(WalletTransactionRepositoryInterface::class, EloquentWalletTransactionRepository::class);
+        $this->app->bind(WalletRepositoryInterface::class   , EloquentWalletRepository::class);
 
-        $this->app->bind(GetAllOrdersQueryInterface::class, EloquentGetAllOrdersQuery::class);
-        $this->app->bind(GetOrderDetailsQueryInterface::class, EloquentGetOrderDetailsQuery::class);
 
-        $this->app->bind(GetAllWalletsQueryInterface::class, EloquentGetAllWalletsQuery::class);
-        $this->app->bind(GetWalletDetailsQueryInterface::class, EloquentGetWalletDetailsQuery::class);
+        $this->app->bind(GetDriversQueryInterface::class             , EloquentGetDriversQuery::class);
+        $this->app->bind(GetDriverProfileQueryInterface::class       , EloquentGetDriverProfileQuery::class);
+
+        $this->app->bind(GetAllPaymentsInterface::class              ,  EloquentGetAllPaymentsQuery::class);
+        $this->app->bind(GetPaymentDetailsInterface::class           ,  EloquentGetPaymentDetails::class);
+
+        $this->app->bind(DriverLocationRepositoryInterface::class    , PersistenceRedisDriverLocationRepository::class);
+        $this->app->bind(OrderDispatchQueryInterface::class          , OrderDispatchQuery::class);
+        $this->app->bind(WalletTransactionRepositoryInterface::class , EloquentWalletTransactionRepository::class);
+
+        $this->app->bind(GetAllOrdersQueryInterface::class    , EloquentGetAllOrdersQuery::class);
+        $this->app->bind(GetOrderDetailsQueryInterface::class , EloquentGetOrderDetailsQuery::class);
+
+        $this->app->bind(GetAllWalletsQueryInterface::class    , EloquentGetAllWalletsQuery::class);
+        $this->app->bind(GetWalletDetailsQueryInterface::class , EloquentGetWalletDetailsQuery::class);
 
         $this->app->bind(GetAllWalletTransactionsQueryInterface::class , EloquentGetAllWalletTransactionsQuery::class);
-        $this->app->bind(GetWalletTransactionQueryInerface::class,EloquentGetWalletTransactionQuery::class);
+        $this->app->bind(GetWalletTransactionQueryInerface::class      , EloquentGetWalletTransactionQuery::class);
+
+        $this->app->bind(PaymentFactoryInterface::class , PaymentFactory::class);
     }
 
     /**

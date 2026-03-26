@@ -7,6 +7,6 @@ use src\PaymentContext\Domain\Entity\Payment;
 class PayPalPaymentGateway implements PaymentGateway{
     public function pay(Payment $payment): array
     {
-        throw new \Exception('Not implemented');
+        throw new \Exception('Sorry! , This feature is not yet activated. Unable to retrieve credentials.');
     }
 }

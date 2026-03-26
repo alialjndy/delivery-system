@@ -3,8 +3,8 @@ namespace src\PaymentContext\Application\Actions ;
 
 use Exception;
 use Illuminate\Support\Facades\Log;
+use src\PaymentContext\Application\Contracts\PaymentFactoryInterface;
 use src\PaymentContext\Application\DTOs\PaymentReadModel;
-use src\PaymentContext\Domain\Contracts\PaymentGateway;
 use src\PaymentContext\Domain\Entity\Payment as PaymentEntity ;
 use src\PaymentContext\Domain\Repositories\PaymentRepositoryInterface;
 use src\Shared\Domain\ValueObjects\Money;
@@ -12,7 +12,7 @@ use src\Shared\Domain\ValueObjects\Money;
 class CreatePayment{
     public function __construct(
         private PaymentRepositoryInterface $paymentRepositoryInterface ,
-        private PaymentGateway $paymentGateway ,
+        private PaymentFactoryInterface $paymentFactoryInterface,
     ){}
     public function execute(array $data){
         try{
@@ -26,11 +26,14 @@ class CreatePayment{
                 $data['transaction_id'] ?? null ,
             );
 
+
+            $paymentProvider = $this->paymentFactoryInterface->make($data['provider']);
+
             // This interacts with Stripe/PayPal APIs to generate a PaymentIntent or Order.
-            $paymentGateWayInfo = $this->paymentGateway->pay($paymentEntity);
+            $paymentGateWayInfo = $paymentProvider->pay($paymentEntity);
 
             // This ensures our system is synced with the external transaction.
-            $paymentEntity->setTransactionId($paymentGateWayInfo['payment_intent_id']);
+            $paymentEntity->markAsInitiatedExternally($paymentGateWayInfo['payment_intent_id']);
 
             $savedPayment = $this->paymentRepositoryInterface->save($paymentEntity);
 
